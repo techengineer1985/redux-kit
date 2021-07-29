@@ -1,38 +1,35 @@
 ## Redux Action Creator
 
-***APOLOGY*** : there was a problem with previous versions as i published them for testing purposes only.
-
-Now everything is working as expected.
-
-**SOON !**
-
--   I will add a gitHub repository in case you have recommendations or found bugs or any other feedback.
--   I will provide a better documentation as well as clearer explanation of how to best utilize this toolkit in your projects
--   More features will be added as well
-
-## The Kit
-
 The purpose of this package is to provide a uniform-interface across the app and an easy way to handle dispatching actions in redux, especially the ones that are asynchronous and/or include side-effects like making API requests. Nevertheless, it is NOT mandatory to make API requests if you don't want to. In fact, almost all the properties that are set in the dataObject are optional, except for the "dispatch" method and the "actionType". Yes, you are right ! you can use this package to also dispatch plain synchronous actions. The other properties on the dataObject are there to use at will, if you need them of course.
 
-`This actionCreator utility is designed to handle even the most complex and intricate of redux actions' scenarios or architectures as well as chained actions.`
+`This actionCreator utility is designed to handle even the most complex and intricate of redux actions' scenarios or architectures as well as nested and chained actions.`
 
-**You can dispatch *multiple actions* or even *multiple action-creators* within a single action-creator.**
+**You can dispatch _multiple actions_ or even _multiple action-creators_ within a single action-creator.**
 
 This action creator utility handles setting the state in the redux store automatically so that you don't need to worry about it; this is handled when you pass the "actionType" that you have specified in the reducer.
 
-## Example:
+**_IMPORTANT_** : Make sure to use **thunk** middleware in your redux store config
 
+**SOON !**
+
+-   I will provide a better documentation as well as clearer explanation of how to best utilize this toolkit in your projects.
+-   I will link a video tutorial on how to use this tool.
+-   More features will be added as well.
+
+## Example:
 
 #### Complete Example
 
 ```javascript
-
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { Kit } from "redux-ac-creator";
+import { actionCreator, mutationCreator } from "redux-ac-creator";
 const handleApiSuccess = props => {};
 const handleApiErrors = e => {};
 const dispatch = useDispatch();
+
+// action creator with API calls
+
 const dataObject = {
 	axios,
 	handleApiSuccess,
@@ -49,16 +46,26 @@ const dataObject = {
 	afterFnAsync: async props => {}
 };
 const exampleFunction = async () => {
-	const response = await dispatch(Kit.actionCreator(dataObject));
+	const response = await dispatch(actionCreator(dataObject));
 };
 
-```
 
+// pure action with NO API calls
+const dataObject = {
+	handleApiErrors,
+	actionType: "",
+	dispatch, // pass the redux dispatch function
+	payload: {},
+	message: "",
+	fn: () => {/* define/call any sync function you want */}
+};
+
+const result = mutationCreator(dataObject)
+```
 
 #### Imports
 
 ```javascript
-
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Kit } from "redux-ac-creator";
@@ -83,15 +90,11 @@ const handleApiSuccess = props => {
 const handleApiErrors = e => {
 	console.log(e); // return or do what you want
 };
-
-
 ```
-
 
 #### dataObject
 
 ```javascript
-
 // Add the properties that you need ONLY
 
 const dataObject = {
@@ -147,35 +150,31 @@ const dataObject = {
 		// asynchronous function that runs After the API call
 		// its return is "res4"
 		/*
-			has access to all the props
-			in the dataObject and the return of
-			'beforeFnSync', 'beforeFnAsync', 'API request',
-			and 'afterFnSync'
+		 * has access to all the props
+		 * in the dataObject and the return of
+		 * 'beforeFnSync', 'beforeFnAsync', 'API request',
+		 * and 'afterFnSync'
 		 */
 		console.log(props); // to see all props
 	}
 };
-
 ```
 
 #### Dispatching Action Creator
 
 ```javascript
-
 // *** calling the action creator in an async environment
 const exampleFunction = async () => {
 	// If you don't need the return value
-	await dispatch(Kit.actionCreator(dataObject));
+	await dispatch(actionCreator(dataObject));
 	/*
 		if handleApiSuccess() handleApiErrors()
 		are defined: the return of the dispatch will
 		be their return values defined above
 	*/
 	//  if you need the return object
-	const response = await dispatch(Kit.actionCreator(dataObject));
+	const response = await dispatch(actionCreator(dataObject));
 };
 // *** calling the action creator in a sync environment
-dispatch(Kit.actionCreator(dataObject));
-
-
+dispatch(actionCreator(dataObject));
 ```

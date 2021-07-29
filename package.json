@@ -1,7 +1,11 @@
 {
   "name": "redux-ac-creator",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/techengineer1985/redux-kit"
+  },
   "main": "index.js",
   "bin": {
     "info": "info.js"
